@@ -12,7 +12,7 @@ import com.example.code_n_share_mobile.R
 import com.example.code_n_share_mobile.models.User
 
 class UserAdapter(
-    private val users: List<User>,
+    private var users: List<User>,
     private val onUserClick: (User) -> Unit
 ) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
@@ -47,5 +47,10 @@ class UserAdapter(
     override fun getItemCount(): Int {
         Log.d("UserAdapter", "Total users: ${users.size}")
         return users.size
+    }
+
+    fun updateUsers(newUsers: List<User>) {
+        users = newUsers
+        notifyDataSetChanged()
     }
 }

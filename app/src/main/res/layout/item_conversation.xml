@@ -14,4 +14,19 @@
         android:textSize="18sp"
         android:layout_marginBottom="4dp" />
 
+    <TextView
+        android:id="@+id/tv_last_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Last message content"
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginBottom="8dp" />
+
+    <ImageView
+        android:id="@+id/btn_delete_conversation"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="end"
+        android:src="@drawable/ic_delete"/>
 </LinearLayout>
