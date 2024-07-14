@@ -32,6 +32,9 @@
             android:name=".view.ConversationActivity"
             android:exported="true"/>
         <activity
+            android:name=".view.CreateConversationActivity"
+            android:exported="true"/>
+        <activity
             android:name=".view.EmailVerificationActivity"
             android:exported="true">
             <intent-filter android:label="Email Verification">

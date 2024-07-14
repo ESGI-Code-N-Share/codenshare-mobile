@@ -26,9 +26,14 @@ class ConversationActivity : BaseActivity() {
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view_conversations)
         loadingProgressBar = findViewById(R.id.loading_progress_bar)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        conversationAdapter = ConversationAdapter(emptyList())
+        conversationAdapter = ConversationAdapter(emptyList()) { conversation ->
+            deleteConversation(conversation.conversationId)
+        }
         recyclerView.adapter = conversationAdapter
 
+        loadUserConversations()
+    }
+    private fun loadUserConversations() {
         val sharedPreferences = getSharedPreferences("auth", Context.MODE_PRIVATE)
         val userId = sharedPreferences.getString("userId", null) ?: return
         Log.d("ConversationActivity", "Loading conversations for user: $userId")
@@ -41,5 +46,11 @@ class ConversationActivity : BaseActivity() {
         }
 
         loadingProgressBar.visibility = View.VISIBLE
+    }
+
+    private fun deleteConversation(conversationId: String) {
+        val sharedPreferences = getSharedPreferences("auth", Context.MODE_PRIVATE)
+        val userId = sharedPreferences.getString("userId", null) ?: return
+        conversationViewModel.deleteConversation(userId, conversationId)
     }
 }

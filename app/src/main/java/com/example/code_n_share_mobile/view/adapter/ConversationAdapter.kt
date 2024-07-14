@@ -1,13 +1,17 @@
+
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.code_n_share_mobile.R
 
-class ConversationAdapter(private var conversations: List<Conversation>) :
-    RecyclerView.Adapter<ConversationAdapter.ConversationViewHolder>() {
+class ConversationAdapter(
+    private var conversations: List<Conversation>,
+    private val onDeleteClick: (Conversation) -> Unit
+) : RecyclerView.Adapter<ConversationAdapter.ConversationViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConversationViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_conversation, parent, false)
@@ -16,7 +20,7 @@ class ConversationAdapter(private var conversations: List<Conversation>) :
 
     override fun onBindViewHolder(holder: ConversationViewHolder, position: Int) {
         val conversation = conversations[position]
-        Log.d("ConversationAdapter", "Binding conversation at position $position: ${conversation.description}")
+        Log.d("ConversationAdapter", "Binding conversation at position $position: ${conversation.owner.firstname}")
         holder.bind(conversation)
     }
 
@@ -30,10 +34,21 @@ class ConversationAdapter(private var conversations: List<Conversation>) :
         notifyDataSetChanged()
     }
 
-    class ConversationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ConversationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvConversationTitle: TextView = itemView.findViewById(R.id.tv_conversation_title)
+        private val tvLastMessage: TextView = itemView.findViewById(R.id.tv_last_message)
+        private val btnDeleteConversation: ImageView = itemView.findViewById(R.id.btn_delete_conversation)
+
         fun bind(conversation: Conversation) {
-            tvConversationTitle.text = conversation.description ?: "No description"
+            val memberNames = conversation.members.joinToString(", ") { it.firstname }
+            tvConversationTitle.text = memberNames
+
+            val lastMessage = conversation.messages.lastOrNull()?.content ?: "No messages"
+            tvLastMessage.text = lastMessage
+
+            btnDeleteConversation.setOnClickListener {
+                onDeleteClick(conversation)
+            }
         }
     }
 }

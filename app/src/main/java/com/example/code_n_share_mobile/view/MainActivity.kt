@@ -9,7 +9,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.code_n_share_mobile.R
@@ -81,7 +80,7 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        postViewModel.posts.observe(this, Observer { posts ->
+        postViewModel.posts.observe(this, { posts ->
             val sharedPreferences = getSharedPreferences("auth", Context.MODE_PRIVATE)
             val userId = sharedPreferences.getString("userId", null) ?: ""
             adapter = PostAdapter(posts, userId,
