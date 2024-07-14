@@ -13,17 +13,35 @@ class RegisterActivity : AppCompatActivity() {
 
     private val authViewModel: AuthViewModel by viewModel()
 
+    private lateinit var etFirstname: EditText
+    private lateinit var etLastname: EditText
+    private lateinit var etEmail: EditText
+    private lateinit var etPassword: EditText
+    private lateinit var etBirthdate: EditText
+    private lateinit var btnRegister: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        val etFirstname = findViewById<EditText>(R.id.et_firstname)
-        val etLastname = findViewById<EditText>(R.id.et_lastname)
-        val etEmail = findViewById<EditText>(R.id.et_email)
-        val etPassword = findViewById<EditText>(R.id.et_password)
-        val etBirthdate = findViewById<EditText>(R.id.et_birthdate)
-        val btnRegister = findViewById<Button>(R.id.btn_register)
+        this.etFirstname = findViewById(R.id.et_firstname)
+        this.etLastname = findViewById(R.id.et_lastname)
+        this.etEmail = findViewById(R.id.et_email)
+        this.etPassword = findViewById(R.id.et_password)
+        this.etBirthdate = findViewById(R.id.et_birthdate)
+        this.btnRegister = findViewById(R.id.btn_register)
 
+        etFirstname.setText("John")
+        etLastname.setText("Doe")
+        etEmail.setText("slimane.abdallah75@gmail.com")
+        etPassword.setText("password")
+        etBirthdate.setText("2000-01-01")
+
+        this.setupListeners()
+        this.observeViewModel()
+    }
+
+    private fun setupListeners() {
         btnRegister.setOnClickListener {
             val firstname = etFirstname.text.toString()
             val lastname = etLastname.text.toString()
@@ -32,23 +50,27 @@ class RegisterActivity : AppCompatActivity() {
             val birthdate = etBirthdate.text.toString()
 
             if (firstname.isNotEmpty() && lastname.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && birthdate.isNotEmpty()) {
-                authViewModel.registerUser(firstname, lastname, email, password, birthdate)
+                authViewModel.registerUser(this, firstname, lastname, email, password, birthdate)
             } else {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             }
         }
+    }
 
-        // Observer for registration response
+    private fun observeViewModel() {
         authViewModel.registrationResult.observe(this) { result ->
             result?.let {
                 if (it.success) {
                     Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show()
-                    // Navigate to another activity or perform further actions
                 } else {
-                    Toast.makeText(this, "Registration failed: ${it.error}", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(this, "Registration failed: ${it.error}", Toast.LENGTH_SHORT).show()
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        authViewModel.registrationResult.removeObservers(this)
     }
 }

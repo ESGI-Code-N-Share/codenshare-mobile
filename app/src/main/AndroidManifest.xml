@@ -11,21 +11,45 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Codensharemobile"
+        android:theme="@style/Theme.AppCompat"
         tools:targetApi="31">
+        <activity
+            android:name=".view.LoginActivity"
+            android:exported="true">
+        </activity>
+
+
         <activity
             android:name=".view.RegisterActivity"
             android:exported="false" />
         <activity
+            android:name=".view.ProfileActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".view.SearchUserActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".view.ConversationActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".view.EmailVerificationActivity"
+            android:exported="true">
+            <intent-filter android:label="Email Verification">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="codenshare" android:host="verify-email-success" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".view.MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.AppCompat">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

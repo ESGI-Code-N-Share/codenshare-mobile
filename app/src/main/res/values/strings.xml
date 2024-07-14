@@ -1,3 +1,37 @@
 <resources>
     <string name="app_name">code-n-share-mobile</string>
+    <string name="go_to_register">Go to Register</string>
+    <string name="go_to_login">Go to Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="stay_logged_in">Stay logged in</string>
+    <string name="login">Login</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email_register">Email</string>
+    <string name="password_register">Password</string>
+    <string name="birthdate">Birthdate (YYYY-MM-DD)</string>
+    <string name="register">Register</string>
+    <string name="welcome">Welcome!</string>
+    <string name="profile">profile</string>
+    <string name="logo">logo</string>
+    <string name="logout">Logout</string>
+    <string name="lorem_ipsum_dolor_sit_amet_consectetur_adipiscing_elit_sed_diam_nonu_mmy_nibh_euismod_tincidunt_ut_laoreet_dolore_magna_aliquam_erat_volutpat">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed diam nonu♦mmy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</string>
+    <string name="hashtag">#hashtag</string>
+    <string name="username">\@username</string>
+    <string name="your_name">Your Name</string>
+    <string name="create_post">+</string>
+    <string name="title">title</string>
+    <string name="content">content</string>
+    <string name="image_url">image_url\n</string>
+    <string name="create">create\n</string>
+    <string name="cancel">cancel</string>
+    <string name="location">location</string>
+    <string name="following">Following</string>
+    <string name="followers">Followers</string>
+    <string name="_0">0</string>
+    <string name="search_users">Search users</string>
+    <string name="search">Search</string>
+    <string name="search_results">Search Results</string>
+    <string name="user_avatar">user_avatar</string>
 </resources>

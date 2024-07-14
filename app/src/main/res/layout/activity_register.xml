@@ -11,7 +11,7 @@
         android:id="@+id/et_firstname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="First Name"
+        android:hint="@string/first_name"
         android:inputType="textPersonName"
         android:padding="10dp"/>
 
@@ -19,7 +19,7 @@
         android:id="@+id/et_lastname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Last Name"
+        android:hint="@string/last_name"
         android:inputType="textPersonName"
         android:padding="10dp"/>
 
@@ -27,7 +27,7 @@
         android:id="@+id/et_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email"
+        android:hint="@string/email_register"
         android:inputType="textEmailAddress"
         android:padding="10dp"/>
 
@@ -35,7 +35,7 @@
         android:id="@+id/et_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
+        android:hint="@string/password_register"
         android:inputType="textPassword"
         android:padding="10dp"/>
 
@@ -43,7 +43,7 @@
         android:id="@+id/et_birthdate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Birthdate (YYYY-MM-DD)"
+        android:hint="@string/birthdate"
         android:inputType="date"
         android:padding="10dp"/>
 
@@ -51,7 +51,7 @@
         android:id="@+id/btn_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Register"
+        android:text="@string/register"
         android:padding="10dp"
         android:layout_marginTop="16dp"/>
 </LinearLayout>

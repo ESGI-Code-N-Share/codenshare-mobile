@@ -1,7 +1,11 @@
 package com.example.code_n_share_mobile.di.module
 
+import android.content.Context
 import com.example.code_n_share_mobile.BuildConfig
 import com.example.code_n_share_mobile.network.AuthApiService
+import com.example.code_n_share_mobile.network.ConversationApiService
+import com.example.code_n_share_mobile.network.PostApiService
+import com.example.code_n_share_mobile.network.UserApiService
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -12,20 +16,24 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 internal val remoteModule = module {
-    single(named("authApiRetrofitClient")) {
-        createRetrofitClient(get(), BuildConfig.CODENSHARE_API_URL, BuildConfig.CODENSHARE_API_KEY)
-    }
-
-    single { createOkHttpClient() }
-
-    single {
-        createWebService<AuthApiService>(
-            get(named("authApiRetrofitClient"))
-        )
-    }
+    single { createOkHttpClient(get()) }
+    single(named("authApiRetrofitClient")) { createRetrofitClient(get(), BuildConfig.CODENSHARE_API_URL) }
+    single { createWebService<AuthApiService>(get(named("authApiRetrofitClient"))) }
+    single { createWebService<PostApiService>(get(named("authApiRetrofitClient"))) }
+    single { createWebService<UserApiService>(get(named("authApiRetrofitClient"))) }
+    single { createWebService<ConversationApiService>(get(named("authApiRetrofitClient"))) }
 }
 
-fun createOkHttpClient(): OkHttpClient {
+fun createRetrofitClient(okhttpClient: OkHttpClient, apiUrl: String): Retrofit {
+    val gsonConverter = GsonConverterFactory.create(GsonBuilder().create())
+    return Retrofit.Builder()
+        .baseUrl(apiUrl.replace("localhost", "10.0.2.2"))
+        .client(okhttpClient)
+        .addConverterFactory(gsonConverter)
+        .build()
+}
+
+fun createOkHttpClient(context: Context): OkHttpClient {
     val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
@@ -34,27 +42,23 @@ fun createOkHttpClient(): OkHttpClient {
         .connectTimeout(20, TimeUnit.SECONDS)
         .readTimeout(20, TimeUnit.SECONDS)
         .addInterceptor(logging)
-        .build()
-}
+        .addInterceptor { chain ->
+            val original = chain.request()
+            val requestBuilder = original.newBuilder()
 
-fun createRetrofitClient(okhttpClient: OkHttpClient, apiUrl: String, apiKey: String): Retrofit {
-    val gsonConverter = GsonConverterFactory.create(
-        GsonBuilder().create()
-    )
-
-    return Retrofit.Builder()
-        .baseUrl(apiUrl)
-        .client(okhttpClient.newBuilder()
-            .addInterceptor { chain ->
-                val original = chain.request()
-                val request = original.newBuilder()
-                    .header("Authorization", apiKey)
-                    .method(original.method, original.body)
-                    .build()
-                chain.proceed(request)
+            val sharedPreferences = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
+            val token = sharedPreferences.getString("token", null)
+            if (token != null && original.url.encodedPath.contains("register").not() &&
+                original.url.encodedPath.contains("login").not() &&
+                original.url.encodedPath.contains("verify-email").not()) {
+                requestBuilder.header("Authorization", "Bearer $token")
             }
-            .build())
-        .addConverterFactory(gsonConverter)
+
+            val request = requestBuilder.method(original.method, original.body).build()
+            chain.proceed(request)
+        }
+        .followRedirects(true)
+        .followSslRedirects(true)
         .build()
 }
 

@@ -1,0 +1,91 @@
+package com.example.code_n_share_mobile.viewModel
+
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.code_n_share_mobile.models.User
+import com.example.code_n_share_mobile.repositories.UserRepository
+import kotlinx.coroutines.launch
+
+data class FollowResult(val success: Boolean, val error: String?)
+data class UnfollowResult(val success: Boolean, val error: String?)
+
+class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
+
+    private val _searchResults = MutableLiveData<List<User>>()
+    val searchResults: LiveData<List<User>> get() = _searchResults
+
+    private val _followers = MutableLiveData<List<User>>()
+    val followers: LiveData<List<User>> get() = _followers
+
+    private val _following = MutableLiveData<List<User>>()
+    val following: LiveData<List<User>> get() = _following
+
+    private val _followResult = MutableLiveData<FollowResult>()
+    val followResult: LiveData<FollowResult> get() = _followResult
+
+    private val _unfollowResult = MutableLiveData<UnfollowResult>()
+    val unfollowResult: LiveData<UnfollowResult> get() = _unfollowResult
+
+    fun searchUsers(query: String) {
+        viewModelScope.launch {
+            try {
+                val users = userRepository.searchUsers(query)
+                _searchResults.postValue(users)
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Error searching users: ${e.message}")
+                _searchResults.postValue(emptyList())
+            }
+        }
+    }
+
+    fun followUser(followerId: String, followedId: String) {
+        viewModelScope.launch {
+            try {
+                userRepository.followUser(followerId, followedId)
+                _followResult.postValue(FollowResult(success = true, error = null))
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Error following user: ${e.message}")
+                _followResult.postValue(FollowResult(success = false, error = e.message))
+            }
+        }
+    }
+
+    fun unfollowUser(followerId: String, followedId: String) {
+        viewModelScope.launch {
+            try {
+                userRepository.unfollowUser(followerId, followedId)
+                _unfollowResult.postValue(UnfollowResult(success = true, error = null))
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Error unfollowing user: ${e.message}")
+                _unfollowResult.postValue(UnfollowResult(success = false, error = e.message))
+            }
+        }
+    }
+
+    fun getFollowers(userId: String) {
+        viewModelScope.launch {
+            try {
+                val followers = userRepository.getFollowers(userId)
+                _followers.postValue(followers)
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Error fetching followers: ${e.message}")
+                _followers.postValue(emptyList())
+            }
+        }
+    }
+
+    fun getFollowing(userId: String) {
+        viewModelScope.launch {
+            try {
+                val following = userRepository.getFollowing(userId)
+                _following.postValue(following)
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Error fetching following: ${e.message}")
+                _following.postValue(emptyList())
+            }
+        }
+    }
+}

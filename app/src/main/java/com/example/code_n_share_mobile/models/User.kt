@@ -5,6 +5,12 @@ data class User(
     val firstname: String,
     val lastname: String,
     val email: String,
-    val birthdate: String,
-    val token: String
+    val token: String,
+    val avatar: String
 )
+
+data class UserResponse(
+    val data: List<User>
+)
+
+
