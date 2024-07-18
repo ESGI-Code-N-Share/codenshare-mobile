@@ -29,14 +29,14 @@
             android:id="@+id/imageView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="30dp"
-            android:contentDescription="logo"
-            android:src="@drawable/logo" />
+            android:layout_marginVertical="50dp"
+            android:src="@drawable/logo"
+            android:contentDescription="logo" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="35dp"
+            android:layout_marginVertical="50dp"
             android:orientation="vertical">
 
             <TextView
@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:text="Login"
+                android:text="CondeNShare"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="25dp" />
@@ -53,9 +53,18 @@
                 android:id="@+id/textView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="20dp"
-                android:text="Happy to see you again"
+                android:text="Découvrez et partagez"
                 android:textAlignment="center"
+                android:paddingHorizontal="20dp"
+                android:textColor="#A0A0A0"
+                android:textSize="20dp" />
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="les meilleurs programmes."
+                android:textAlignment="center"
+                android:paddingHorizontal="20dp"
                 android:textColor="#A0A0A0"
                 android:textSize="20dp" />
         </LinearLayout>
@@ -75,46 +84,24 @@
                 android:padding="10dp"
                 app:layout_constraintBottom_toBottomOf="parent">
 
-
-                <EditText
-                    android:id="@+id/et_email"
+                <Button
+                    android:id="@+id/btn_redirect_login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/input_filled_black_border"
-                    android:ems="10"
-                    android:hint="@string/email"
-                    android:inputType="textEmailAddress"
-                    android:paddingHorizontal="14dp"
-                    android:paddingVertical="12dp" />
-
-                <EditText
-                    android:id="@+id/et_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/input_filled_black_border"
-                    android:ems="10"
-                    android:hint="@string/password"
-                    android:inputType="textPassword"
-                    android:paddingHorizontal="14dp"
-                    android:paddingVertical="12dp" />
-
-                <CheckBox
-                    android:id="@+id/cb_stay_login"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:text="@string/stay_logged_in" />
+                    android:background="@drawable/button_normal_border_primary"
+                    android:textSize="18dp"
+                    android:textAllCaps="false"
+                    android:text="Log in" />
 
                 <Button
-                    android:id="@+id/btn_login"
+                    android:id="@+id/btn_redirect_sign_up"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/button_small_border_primary"
-                    android:text="Log in"
+                    android:layout_marginTop="15dp"
                     android:textAllCaps="false"
-                    android:textSize="18dp" />
+                    android:background="@drawable/button_normal_border_secondary"
+                    android:textSize="18dp"
+                    android:text="Sign up" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
