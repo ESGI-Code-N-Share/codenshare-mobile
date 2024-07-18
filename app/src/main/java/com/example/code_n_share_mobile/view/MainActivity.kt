@@ -37,7 +37,7 @@ class MainActivity : BaseActivity() {
 
         parseAndInjectConfiguration()
         injectModuleDependencies(this)
-        setupBottomNavigation()
+        setupBottomNavigation(R.id.nav_home)
 
         this.btnGoToRegister = findViewById(R.id.btn_go_to_register)
         this.btnGoToLogin = findViewById(R.id.btn_go_to_login)

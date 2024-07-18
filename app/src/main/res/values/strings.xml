@@ -34,4 +34,6 @@
     <string name="search">Search</string>
     <string name="search_results">Search Results</string>
     <string name="user_avatar">user_avatar</string>
+    <string name="type_message">Envoyer un message</string>
+    <string name="button_send">send\n</string>
 </resources>

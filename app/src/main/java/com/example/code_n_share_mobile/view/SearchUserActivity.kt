@@ -29,7 +29,7 @@ class SearchUserActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_user)
 
-        setupBottomNavigation()
+        setupBottomNavigation(R.id.nav_search)
 
         this.resultUsersRecyclerView = findViewById(R.id.result_users_recycler_view)
         this.searchBar = findViewById(R.id.search_user_input)

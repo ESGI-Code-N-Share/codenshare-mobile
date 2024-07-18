@@ -32,7 +32,7 @@ class ProfileActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-        setupBottomNavigation()
+        setupBottomNavigation(R.id.nav_profile)
 
         imgProfile = findViewById(R.id.img_profile)
         tvName = findViewById(R.id.tv_name)

@@ -1,6 +1,5 @@
 package com.example.code_n_share_mobile.view
 
-import ConversationAdapter
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +8,7 @@ import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.code_n_share_mobile.R
+import com.example.code_n_share_mobile.view.adapter.ConversationAdapter
 import com.example.code_n_share_mobile.viewModel.ConversationViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -21,18 +21,19 @@ class ConversationActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conversation)
-        setupBottomNavigation()
+        setupBottomNavigation(R.id.nav_conversations)
 
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view_conversations)
         loadingProgressBar = findViewById(R.id.loading_progress_bar)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        conversationAdapter = ConversationAdapter(emptyList()) { conversation ->
+        conversationAdapter = ConversationAdapter(emptyList(), this) { conversation ->
             deleteConversation(conversation.conversationId)
         }
         recyclerView.adapter = conversationAdapter
 
         loadUserConversations()
     }
+
     private fun loadUserConversations() {
         val sharedPreferences = getSharedPreferences("auth", Context.MODE_PRIVATE)
         val userId = sharedPreferences.getString("userId", null) ?: return
