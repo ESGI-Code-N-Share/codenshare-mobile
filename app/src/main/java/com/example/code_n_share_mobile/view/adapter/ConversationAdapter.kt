@@ -1,4 +1,8 @@
+package com.example.code_n_share_mobile.view.adapter
 
+import Conversation
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -7,9 +11,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.code_n_share_mobile.R
+import com.example.code_n_share_mobile.view.MessageActivity
 
 class ConversationAdapter(
     private var conversations: List<Conversation>,
+    private val context: Context,
     private val onDeleteClick: (Conversation) -> Unit
 ) : RecyclerView.Adapter<ConversationAdapter.ConversationViewHolder>() {
 
@@ -45,6 +51,12 @@ class ConversationAdapter(
 
             val lastMessage = conversation.messages.lastOrNull()?.content ?: "No messages"
             tvLastMessage.text = lastMessage
+
+            itemView.setOnClickListener {
+                val intent = Intent(context, MessageActivity::class.java)
+                intent.putExtra("conversationId", conversation.conversationId)
+                context.startActivity(intent)
+            }
 
             btnDeleteConversation.setOnClickListener {
                 onDeleteClick(conversation)

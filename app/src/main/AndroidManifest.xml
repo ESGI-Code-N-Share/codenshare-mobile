@@ -29,6 +29,9 @@
             android:name=".view.SearchUserActivity"
             android:exported="true"/>
         <activity
+            android:name=".view.MessageActivity"
+            android:exported="true"/>
+        <activity
             android:name=".view.ConversationActivity"
             android:exported="true"/>
         <activity

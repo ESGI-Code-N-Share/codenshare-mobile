@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.code_n_share_mobile.BuildConfig
 import com.example.code_n_share_mobile.network.AuthApiService
 import com.example.code_n_share_mobile.network.ConversationApiService
+import com.example.code_n_share_mobile.network.MessageApiService
 import com.example.code_n_share_mobile.network.PostApiService
 import com.example.code_n_share_mobile.network.UserApiService
 import com.google.gson.GsonBuilder
@@ -22,6 +23,7 @@ internal val remoteModule = module {
     single { createWebService<PostApiService>(get(named("authApiRetrofitClient"))) }
     single { createWebService<UserApiService>(get(named("authApiRetrofitClient"))) }
     single { createWebService<ConversationApiService>(get(named("authApiRetrofitClient"))) }
+    single { createWebService<MessageApiService>(get(named("authApiRetrofitClient"))) }
 }
 
 fun createRetrofitClient(okhttpClient: OkHttpClient, apiUrl: String): Retrofit {

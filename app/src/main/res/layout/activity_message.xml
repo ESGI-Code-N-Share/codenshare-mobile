@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_messages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_above="@id/message_input_layout"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="8dp"
+        android:overScrollMode="never"
+        android:scrollbars="none" />
+
+    <ProgressBar
+        android:id="@id/loading_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/message_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:background="?android:attr/windowBackground">
+
+        <EditText
+            android:id="@+id/et_message_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/type_message"
+            android:inputType="textCapSentences|textMultiLine"
+            android:lines="1"
+            android:maxLines="5"
+            android:background="@drawable/edit_text_background" />
+
+        <ImageView
+            android:id="@+id/btn_send_message"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:text="@string/button_send"
+            android:paddingStart="8dp"
+            android:src="@drawable/ic_send" />
+    </LinearLayout>
+
+</RelativeLayout>

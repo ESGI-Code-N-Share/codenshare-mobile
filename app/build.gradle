@@ -103,4 +103,10 @@ dependencies {
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
+
+    // Socket IO
+    implementation 'io.socket:socket.io-client:2.0.1'
+
+    implementation 'com.google.code.gson:gson:2.8.6'
+
 }

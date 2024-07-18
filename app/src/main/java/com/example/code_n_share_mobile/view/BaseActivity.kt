@@ -18,27 +18,36 @@ abstract class BaseActivity : AppCompatActivity(), BottomNavigationView.OnNaviga
         super.onCreate(savedInstanceState)
     }
 
-    protected fun setupBottomNavigation() {
+    protected fun setupBottomNavigation(selectedItemId: Int) {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNavigationView.setOnNavigationItemSelectedListener(this)
+        bottomNavigationView.selectedItemId = selectedItemId
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_home -> {
-                startActivity(Intent(this, MainActivity::class.java))
+                if (!isCurrentActivity(MainActivity::class.java)) {
+                    startActivity(Intent(this, MainActivity::class.java))
+                }
                 return true
             }
             R.id.nav_search -> {
-                startActivity(Intent(this, SearchUserActivity::class.java))
+                if (!isCurrentActivity(SearchUserActivity::class.java)) {
+                    startActivity(Intent(this, SearchUserActivity::class.java))
+                }
                 return true
             }
             R.id.nav_profile -> {
-                navigateToProfile()
+                if (!isCurrentActivity(ProfileActivity::class.java)) {
+                    navigateToProfile()
+                }
                 return true
             }
             R.id.nav_conversations -> {
-                startActivity(Intent(this, ConversationActivity::class.java))
+                if (!isCurrentActivity(ConversationActivity::class.java)) {
+                    startActivity(Intent(this, ConversationActivity::class.java))
+                }
                 return true
             }
             R.id.nav_logout -> {
@@ -47,6 +56,10 @@ abstract class BaseActivity : AppCompatActivity(), BottomNavigationView.OnNaviga
             }
         }
         return false
+    }
+
+    private fun isCurrentActivity(activityClass: Class<*>): Boolean {
+        return this::class.java == activityClass
     }
 
     private fun navigateToProfile() {
