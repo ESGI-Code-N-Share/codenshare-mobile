@@ -10,17 +10,18 @@ import com.example.code_n_share_mobile.viewModel.ConversationViewModel
 import com.example.code_n_share_mobile.viewModel.MessageViewModel
 import com.example.code_n_share_mobile.viewModel.PostViewModel
 import com.example.code_n_share_mobile.viewModel.UserViewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 internal val coreModule = module {
     single { UserRepository(get()) }
     single { AuthRepository(get()) }
     single { PostRepository(get()) }
-    single { ConversationRepository(get()) }
     single { MessageRepository(get()) }
-    single { AuthViewModel(get()) }
-    single { PostViewModel(get()) }
-    single { UserViewModel(get()) }
-    single { ConversationViewModel(get()) }
-    single { MessageViewModel(get()) }
+    single { ConversationRepository(get()) }
+    viewModel { AuthViewModel(get()) }
+    viewModel { PostViewModel(get()) }
+    viewModel { UserViewModel(get()) }
+    viewModel { ConversationViewModel(get()) }
+    viewModel { MessageViewModel(get()) }
 }

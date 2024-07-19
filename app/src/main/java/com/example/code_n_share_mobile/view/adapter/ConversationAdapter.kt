@@ -12,6 +12,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.code_n_share_mobile.R
 import com.example.code_n_share_mobile.view.MessageActivity
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
 
 class ConversationAdapter(
     private var conversations: List<Conversation>,
@@ -43,6 +47,7 @@ class ConversationAdapter(
     inner class ConversationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvConversationTitle: TextView = itemView.findViewById(R.id.tv_conversation_title)
         private val tvLastMessage: TextView = itemView.findViewById(R.id.tv_last_message)
+        private val tvLastMessageHour: TextView = itemView.findViewById(R.id.tv_last_message_hour)
         private val btnDeleteConversation: ImageView = itemView.findViewById(R.id.btn_delete_conversation)
 
         fun bind(conversation: Conversation) {
@@ -51,6 +56,9 @@ class ConversationAdapter(
 
             val lastMessage = conversation.messages.lastOrNull()?.content ?: "No messages"
             tvLastMessage.text = lastMessage
+
+            val lastMessageHour = conversation.messages.lastOrNull()?.sendAt?.let { formatDate(it) } ?: ""
+            tvLastMessageHour.text = lastMessageHour
 
             itemView.setOnClickListener {
                 val intent = Intent(context, MessageActivity::class.java)
@@ -61,6 +69,11 @@ class ConversationAdapter(
             btnDeleteConversation.setOnClickListener {
                 onDeleteClick(conversation)
             }
+        }
+
+        private fun formatDate(date: Date): String {
+            val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+            return format.format(date)
         }
     }
 }

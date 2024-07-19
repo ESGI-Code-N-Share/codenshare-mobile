@@ -1,5 +1,3 @@
-package com.example.code_n_share_mobile.models.auth
-
 import com.example.code_n_share_mobile.models.User
 
 data class RegisterRequest(
