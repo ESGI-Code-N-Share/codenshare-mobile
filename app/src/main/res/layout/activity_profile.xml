@@ -19,7 +19,7 @@
             android:padding="10dp">
 
             <ImageView
-                android:id="@+id/item_user_image"
+                android:id="@+id/img_profile"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:scaleType="centerCrop"
@@ -32,7 +32,7 @@
                 android:paddingHorizontal="12dp">
 
                 <TextView
-                    android:id="@+id/item_user_name"
+                    android:id="@+id/tv_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
@@ -42,7 +42,7 @@
 
 
                 <TextView
-                    android:id="@+id/item_user_handle"
+                    android:id="@+id/tv_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/darker_gray"
@@ -50,7 +50,7 @@
                     tools:hint="\@corentin.lechene" />
 
                 <Button
-                    android:id="@+id/btn_redirect_sign_up"
+                    android:id="@+id/btn_follow"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:layout_marginTop="10dp"
@@ -84,13 +84,13 @@
                 android:orientation="horizontal">
 
                 <!--  todo: add icon               -->
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@tools:sample/avatars" />
+<!--                <ImageView-->
+<!--                    android:layout_width="30dp"-->
+<!--                    android:layout_height="30dp"-->
+<!--                    android:src="@tools:sample/avatars" />-->
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/tv_followers"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -107,13 +107,13 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@tools:sample/avatars" />
+<!--                <ImageView-->
+<!--                    android:layout_width="30dp"-->
+<!--                    android:layout_height="30dp"-->
+<!--                    android:src="@tools:sample/avatars" />-->
 
                 <TextView
-                    android:id="@+id/textView6"
+                    android:id="@+id/tv_following"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"

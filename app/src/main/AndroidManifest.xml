@@ -23,6 +23,9 @@
             android:name=".view.RegisterActivity"
             android:exported="false" />
         <activity
+            android:name=".view.IntroductionActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.ProfileActivity"
             android:exported="true"/>
         <activity

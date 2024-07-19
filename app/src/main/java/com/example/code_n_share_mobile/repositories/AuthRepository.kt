@@ -1,16 +1,26 @@
 package com.example.code_n_share_mobile.repositories
 
-import com.example.code_n_share_mobile.models.auth.LoginRequest
-import com.example.code_n_share_mobile.models.auth.LoginResponse
-import com.example.code_n_share_mobile.models.auth.LogoutResponse
-import com.example.code_n_share_mobile.models.auth.RegisterRequest
-import com.example.code_n_share_mobile.models.auth.RegisterResponse
+import LoginRequest
+import LoginResponse
+import LogoutResponse
+import RegisterRequest
+import RegisterResponse
+import android.util.Log
 import com.example.code_n_share_mobile.network.AuthApiService
 
 class AuthRepository(private val authApiService: AuthApiService) {
 
+
     suspend fun registerUser(request: RegisterRequest): RegisterResponse {
-        return authApiService.registerUser(request)
+        Log.d("AuthRepository", "Sending register request: $request")
+        try {
+            val response = authApiService.registerUser(request)
+            Log.d("AuthRepository", "Received register response: $response")
+            return response
+        } catch (e: Exception) {
+            Log.e("AuthRepository", "Error registering user: ${e.message}")
+            throw e
+        }
     }
 
     suspend fun loginUser(request: LoginRequest): LoginResponse {

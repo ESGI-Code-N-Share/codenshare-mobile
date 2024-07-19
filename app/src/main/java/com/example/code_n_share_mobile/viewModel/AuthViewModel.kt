@@ -1,5 +1,7 @@
 package com.example.code_n_share_mobile.viewModel
 
+import LoginRequest
+import RegisterRequest
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -8,8 +10,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.code_n_share_mobile.models.auth.LoginRequest
-import com.example.code_n_share_mobile.models.auth.RegisterRequest
 import com.example.code_n_share_mobile.repositories.AuthRepository
 import com.example.code_n_share_mobile.view.EmailVerificationActivity
 import com.example.code_n_share_mobile.view.MainActivity

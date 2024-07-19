@@ -32,12 +32,8 @@ class ConversationViewModel(private val conversationRepository: ConversationRepo
         viewModelScope.launch {
             try {
                 val newConversation = conversationRepository.createConversation(ownerId, memberIds)
-                if (newConversation != null) {
-                    _creationResult.postValue(newConversation)
-                    loadConversations(ownerId)
-                } else {
-                    Log.e("ConversationViewModel", "Failed to create conversation")
-                }
+                _creationResult.postValue(newConversation)
+                loadConversations(ownerId)
             } catch (e: Exception) {
                 Log.e("ConversationViewModel", "Error creating conversation: ${e.message}")
             }

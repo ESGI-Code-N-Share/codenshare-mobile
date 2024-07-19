@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -25,8 +24,6 @@ class MainActivity : BaseActivity() {
     private val authViewModel: AuthViewModel by viewModel()
     private val postViewModel: PostViewModel by viewModel()
 
-    private lateinit var btnGoToRegister: Button
-    private lateinit var btnGoToLogin: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: PostAdapter
     private lateinit var fabCreatePost: FloatingActionButton
@@ -39,18 +36,8 @@ class MainActivity : BaseActivity() {
         injectModuleDependencies(this)
         setupBottomNavigation(R.id.nav_home)
 
-        this.btnGoToRegister = findViewById(R.id.btn_go_to_register)
-        this.btnGoToLogin = findViewById(R.id.btn_go_to_login)
         this.recyclerView = findViewById(R.id.recycler_view)
         this.fabCreatePost = findViewById(R.id.fab_create_post)
-
-        btnGoToRegister.setOnClickListener {
-            register()
-        }
-
-        btnGoToLogin.setOnClickListener {
-            login()
-        }
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -80,7 +67,7 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        postViewModel.posts.observe(this, { posts ->
+        postViewModel.posts.observe(this) { posts ->
             val sharedPreferences = getSharedPreferences("auth", Context.MODE_PRIVATE)
             val userId = sharedPreferences.getString("userId", null) ?: ""
             adapter = PostAdapter(posts, userId,
@@ -90,7 +77,7 @@ class MainActivity : BaseActivity() {
             )
             recyclerView.adapter = adapter
             Log.d("MainActivity", "Posts updated: ${posts.size} posts received")
-        })
+        }
     }
 
     private fun loadPosts() {
@@ -112,41 +99,13 @@ class MainActivity : BaseActivity() {
         val sharedPreferences = getSharedPreferences("auth", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("token", null)
         if (token != null) {
-            btnGoToRegister.visibility = View.GONE
-            btnGoToLogin.visibility = View.GONE
             fabCreatePost.visibility = View.VISIBLE
             loadPosts()
         } else {
-            btnGoToRegister.visibility = View.VISIBLE
-            btnGoToLogin.visibility = View.VISIBLE
-            fabCreatePost.visibility = View.GONE
+//            clearSharedPreferences(sharedPreferences)
+            startActivity(Intent(this, IntroductionActivity::class.java))
+            finish()
         }
-    }
-
-    private fun navigateToProfile() {
-        val sharedPreferences = getSharedPreferences("auth", Context.MODE_PRIVATE)
-        val userId = sharedPreferences.getString("userId", "") ?: ""
-        val firstname = sharedPreferences.getString("firstname", "") ?: ""
-        val lastname = sharedPreferences.getString("lastname", "") ?: ""
-        val email = sharedPreferences.getString("email", "") ?: ""
-        val avatarUrl = sharedPreferences.getString("avatarUrl", "") ?: ""
-
-        Intent(this, ProfileActivity::class.java).also {
-            it.putExtra("userId", userId)
-            it.putExtra("firstname", firstname)
-            it.putExtra("lastname", lastname)
-            it.putExtra("email", email)
-            it.putExtra("avatarUrl", avatarUrl)
-            startActivity(it)
-        }
-    }
-
-    private fun register() {
-        Intent(this, RegisterActivity::class.java).also { startActivity(it) }
-    }
-
-    private fun login() {
-        Intent(this, LoginActivity::class.java).also { startActivity(it) }
     }
 
     private fun showCreatePostDialog() {

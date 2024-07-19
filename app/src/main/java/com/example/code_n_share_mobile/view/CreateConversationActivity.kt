@@ -51,7 +51,6 @@ class CreateConversationActivity : AppCompatActivity() {
 
         conversationViewModel.creationResult.observe(this) {
             Toast.makeText(this, "Conversation created", Toast.LENGTH_SHORT).show()
-            finish()
         }
     }
 

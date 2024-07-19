@@ -1,6 +1,7 @@
 package com.example.code_n_share_mobile.di.module
 
 import android.content.Context
+import android.util.Log
 import com.example.code_n_share_mobile.BuildConfig
 import com.example.code_n_share_mobile.network.AuthApiService
 import com.example.code_n_share_mobile.network.ConversationApiService
@@ -57,12 +58,16 @@ fun createOkHttpClient(context: Context): OkHttpClient {
             }
 
             val request = requestBuilder.method(original.method, original.body).build()
-            chain.proceed(request)
+            Log.d("OkHttpClient", "Request: ${request.method} ${request.url}")
+            val response = chain.proceed(request)
+            Log.d("OkHttpClient", "Response: ${response.code} ${response.message}")
+            response
         }
         .followRedirects(true)
         .followSslRedirects(true)
         .build()
 }
+
 
 inline fun <reified T> createWebService(retrofit: Retrofit): T {
     return retrofit.create(T::class.java)

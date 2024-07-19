@@ -85,7 +85,7 @@
                 app:layout_constraintBottom_toBottomOf="parent">
 
                 <Button
-                    android:id="@+id/btn_redirect_login"
+                    android:id="@+id/btn_go_to_login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_normal_border_primary"
@@ -94,7 +94,7 @@
                     android:text="Log in" />
 
                 <Button
-                    android:id="@+id/btn_redirect_sign_up"
+                    android:id="@+id/btn_go_to_register"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"

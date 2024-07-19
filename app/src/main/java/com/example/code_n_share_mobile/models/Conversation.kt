@@ -1,4 +1,3 @@
-import com.example.code_n_share_mobile.models.Message
 import com.example.code_n_share_mobile.models.User
 import java.util.Date
 
@@ -9,6 +8,14 @@ data class Conversation(
     val messages: List<Message>,
     val createdAt: Date,
     val description: String? = null
+)
+
+
+data class Message(
+    val messageId: String,
+    val senderId: String,
+    val content: String,
+    val sendAt: Date
 )
 
 data class ConversationResponse(
