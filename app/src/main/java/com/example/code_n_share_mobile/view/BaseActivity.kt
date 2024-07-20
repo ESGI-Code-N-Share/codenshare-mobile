@@ -69,6 +69,7 @@ abstract class BaseActivity : AppCompatActivity(), BottomNavigationView.OnNaviga
         val lastname = sharedPreferences.getString("lastname", "") ?: ""
         val email = sharedPreferences.getString("email", "") ?: ""
         val avatarUrl = sharedPreferences.getString("avatarUrl", "") ?: ""
+        val overview = sharedPreferences.getString("overview", "") ?: ""
 
         Intent(this, ProfileActivity::class.java).also {
             it.putExtra("userId", userId)
@@ -76,6 +77,7 @@ abstract class BaseActivity : AppCompatActivity(), BottomNavigationView.OnNaviga
             it.putExtra("lastname", lastname)
             it.putExtra("email", email)
             it.putExtra("avatarUrl", avatarUrl)
+            it.putExtra("overview", overview)
             startActivity(it)
         }
     }

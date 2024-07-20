@@ -15,12 +15,13 @@ import com.example.code_n_share_mobile.models.Post
 import org.koin.core.component.KoinComponent
 
 class PostAdapter(
-    private val posts: List<Post>,
+    private var posts: List<Post>,
     private val userId: String,
     private val onDeletePost: (String, String) -> Unit,
     private val onLikePost: (String) -> Unit,
     private val onUnlikePost: (String) -> Unit
 ) : RecyclerView.Adapter<PostAdapter.PostViewHolder>(), KoinComponent {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false)
         return PostViewHolder(view, userId, onDeletePost, onLikePost, onUnlikePost)
@@ -28,6 +29,11 @@ class PostAdapter(
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         holder.bind(posts[position])
+    }
+
+    fun updatePosts(newPosts: List<Post>) {
+        posts = newPosts
+        notifyDataSetChanged()
     }
 
     override fun getItemCount() = posts.size
@@ -81,14 +87,18 @@ class PostAdapter(
 
             btnLikePost.setImageResource(if (post.isLikedByUser) R.drawable.ic_liked else R.drawable.ic_like)
             btnLikePost.setOnClickListener {
-                Log.d("PostAdapter", "Like button clicked for postId: ${post.postId}, isLiked: ${post.isLikedByUser}")
                 if (post.isLikedByUser) {
-                    Log.d("PostAdapter", "Unliking post with postId: ${post.postId}")
                     onUnlikePost(post.postId)
+                    post.isLikedByUser = false
+                    post.likesCount -= 1
+                    btnLikePost.setImageResource(R.drawable.ic_like)
                 } else {
-                    Log.d("PostAdapter", "Liking post with postId: ${post.postId}")
                     onLikePost(post.postId)
+                    post.isLikedByUser = true
+                    post.likesCount += 1
+                    btnLikePost.setImageResource(R.drawable.ic_liked)
                 }
+                tvLikesCount.text = post.likesCount.toString()
             }
         }
     }

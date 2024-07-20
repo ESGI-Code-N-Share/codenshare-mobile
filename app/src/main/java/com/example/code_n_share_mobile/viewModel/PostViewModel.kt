@@ -26,6 +26,18 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
         }
     }
 
+    fun loadPostsForUser(userId: String) {
+        viewModelScope.launch {
+            try {
+                val postList = postRepository.getPostsForUser(userId)
+                _posts.postValue(postList)
+            } catch (e: Exception) {
+                Log.e("PostViewModel", "Error fetching posts for user: ${e.message}")
+                _posts.postValue(emptyList())
+            }
+        }
+    }
+
     fun createPost(authorId: String, title: String, content: String, image: String?) {
         viewModelScope.launch {
             try {
@@ -54,7 +66,6 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
             try {
                 Log.d("PostViewModel", "Liking post with postId: $postId, userId: $userId")
                 postRepository.likePost(postId, userId)
-                updatePostLikeStatus(postId, true)
             } catch (e: Exception) {
                 Log.e("PostViewModel", "Error liking post: ${e.message}")
             }
@@ -66,20 +77,8 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
             try {
                 Log.d("PostViewModel", "Unliking post with postId: $postId, userId: $userId")
                 postRepository.unlikePost(postId, userId)
-                updatePostLikeStatus(postId, false)
             } catch (e: Exception) {
                 Log.e("PostViewModel", "Error unliking post: ${e.message}")
-            }
-        }
-    }
-
-    private fun updatePostLikeStatus(postId: String, isLiked: Boolean) {
-        _posts.value = _posts.value?.map { post ->
-            if (post.postId == postId) {
-                Log.d("PostViewModel", "Updating like status for postId: $postId, isLiked: $isLiked")
-                post.copy(isLikedByUser = isLiked, likesCount = if (isLiked) post.likesCount + 1 else post.likesCount - 1)
-            } else {
-                post
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.example.code_n_share_mobile.repositories
 
 import android.util.Log
+import com.example.code_n_share_mobile.models.EditUser
 import com.example.code_n_share_mobile.models.User
 import com.example.code_n_share_mobile.network.UserApiService
 
@@ -53,6 +54,15 @@ class UserRepository(private val userApiService: UserApiService) {
         } catch (e: Exception) {
             Log.e("UserRepository", "Error fetching followers: ${e.message}")
             emptyList()
+        }
+    }
+
+    suspend fun updateUser(userId: String, user: EditUser) {
+        try {
+            userApiService.updateUser(userId, user)
+            Log.d("UserRepository", "User profile updated successfully")
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Error updating user profile: ${e.message}")
         }
     }
 
