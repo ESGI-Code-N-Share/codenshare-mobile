@@ -6,8 +6,8 @@ import com.example.code_n_share_mobile.models.UserResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.HTTP
+import retrofit2.http.PATCH
 import retrofit2.http.POST
-import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -31,6 +31,6 @@ interface UserApiService {
     @GET("/api/v1/users/{userId}")
     suspend fun getUserById(@Path("userId") userId: String): User
 
-    @PUT("/api/v1/users/{userId}")
+    @PATCH("/api/v1/users/{userId}")
     suspend fun updateUser(@Path("userId") userId: String, @Body user: EditUser): User
 }

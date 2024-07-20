@@ -13,7 +13,6 @@ data class User(
 data class EditUser(
     val firstname: String,
     val lastname: String,
-    val email: String,
     val overview: String?
 )
 

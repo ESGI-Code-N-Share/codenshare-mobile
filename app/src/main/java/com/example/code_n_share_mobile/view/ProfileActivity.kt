@@ -203,12 +203,10 @@ class ProfileActivity : BaseActivity() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_edit_profile, null)
         val etFirstname = dialogView.findViewById<EditText>(R.id.et_firstname)
         val etLastname = dialogView.findViewById<EditText>(R.id.et_lastname)
-        val etEmail = dialogView.findViewById<EditText>(R.id.et_email)
         val etOverview = dialogView.findViewById<EditText>(R.id.et_overview)
 
         etFirstname.setText(currentUser.firstname)
         etLastname.setText(currentUser.lastname)
-        etEmail.setText(currentUser.email)
         etOverview.setText(currentUser.overview)
 
         AlertDialog.Builder(this)
@@ -218,7 +216,6 @@ class ProfileActivity : BaseActivity() {
                 val updatedUser = EditUser(
                     firstname = etFirstname.text.toString(),
                     lastname = etLastname.text.toString(),
-                    email = etEmail.text.toString(),
                     overview = etOverview.text.toString()
                 )
                 updateUserProfile(loggedInUserId, updatedUser)
@@ -231,12 +228,10 @@ class ProfileActivity : BaseActivity() {
         userViewModel.updateUserProfile(userId, updatedUser)
 
         tvName.text = "${updatedUser.firstname} ${updatedUser.lastname}"
-        tvHandle.text = "@${updatedUser.email.split("@")[0]}"
         tvOverview.text = updatedUser.overview
         currentUser = currentUser.copy(
             firstname = updatedUser.firstname,
             lastname = updatedUser.lastname,
-            email = updatedUser.email,
             overview = updatedUser.overview
         )
     }
