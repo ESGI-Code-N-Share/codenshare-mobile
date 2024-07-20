@@ -20,9 +20,40 @@
         android:minLines="3"
         android:gravity="top|start" />
 
-    <EditText
-        android:id="@+id/et_post_image"
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="@string/image_url" />
+        android:text="Select an image:" />
+
+    <RadioGroup
+        android:id="@+id/radio_group_images"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/radio_image_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Image 1" />
+
+        <RadioButton
+            android:id="@+id/radio_image_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Image 2" />
+
+        <RadioButton
+            android:id="@+id/radio_image_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Image 3" />
+    </RadioGroup>
+
+    <ImageView
+        android:id="@+id/img_preview"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:visibility="gone"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="16dp"/>
 </LinearLayout>

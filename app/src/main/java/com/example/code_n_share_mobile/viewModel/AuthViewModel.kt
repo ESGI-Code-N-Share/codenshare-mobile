@@ -75,6 +75,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
                     putString("firstname", response.data.firstname)
                     putString("lastname", response.data.lastname)
                     putString("email", response.data.email)
+                    putString("overview", response.data.overview)
                     apply()
                 }
 

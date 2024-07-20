@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.code_n_share_mobile.models.EditUser
 import com.example.code_n_share_mobile.models.User
 import com.example.code_n_share_mobile.repositories.UserRepository
 import kotlinx.coroutines.launch
@@ -85,6 +86,17 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
             } catch (e: Exception) {
                 Log.e("UserViewModel", "Error fetching following: ${e.message}")
                 _following.postValue(emptyList())
+            }
+        }
+    }
+
+    fun updateUserProfile(userId: String, user: EditUser) {
+        viewModelScope.launch {
+            try {
+                userRepository.updateUser(userId, user)
+                Log.d("UserViewModel", "User profile updated successfully")
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Error updating user profile: ${e.message}")
             }
         }
     }
