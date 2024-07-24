@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.code_n_share_mobile.models.Message
 import com.example.code_n_share_mobile.models.SendMessageRequest
 import com.example.code_n_share_mobile.repositories.MessageRepository
+import com.example.code_n_share_mobile.utils.extractErrorMessage
 import kotlinx.coroutines.launch
 
 class MessageViewModel(private val messageRepository: MessageRepository) : ViewModel() {
@@ -24,7 +25,8 @@ class MessageViewModel(private val messageRepository: MessageRepository) : ViewM
                 }
                 _messages.postValue(messageList)
             } catch (e: Exception) {
-                Log.e("MessageViewModel", "Error loading messages: ${e.message}")
+                val errorMessage = extractErrorMessage(e)
+                Log.e("MessageViewModel", "Error loading messages: $errorMessage")
             }
         }
     }
@@ -36,7 +38,8 @@ class MessageViewModel(private val messageRepository: MessageRepository) : ViewM
                 messageRepository.sendMessage(userId, conversationId, request)
                 loadMessages(userId, userEmail, conversationId)
             } catch (e: Exception) {
-                Log.e("MessageViewModel", "Error sending message: ${e.message}")
+                val errorMessage = extractErrorMessage(e)
+                Log.e("MessageViewModel", "Error sending message: $errorMessage")
             }
         }
     }

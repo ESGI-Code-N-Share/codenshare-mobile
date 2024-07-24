@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -24,6 +23,19 @@
             app:layout_constraintTop_toTopOf="parent"
             android:background="@drawable/post_border_dark"
             tools:listitem="@layout/item_conversation" />
+
+        <TextView
+            android:id="@+id/no_conversations_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No conversations"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:visibility="gone"
+            android:padding="16dp"
+            android:textSize="18sp"
+            android:background="@drawable/post_border_dark"
+            android:layout_margin="16dp"/>
 
     </LinearLayout>
 

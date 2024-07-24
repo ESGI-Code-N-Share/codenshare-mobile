@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.code_n_share_mobile.R
@@ -20,7 +21,7 @@ class ConversationActivity : BaseActivity() {
     private lateinit var conversationAdapter: ConversationAdapter
     private lateinit var loadingProgressBar: ProgressBar
     private lateinit var fabCreateConversation: FloatingActionButton
-
+    private lateinit var noConversationsMessage: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +31,7 @@ class ConversationActivity : BaseActivity() {
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view_conversations)
         loadingProgressBar = findViewById(R.id.loading_progress_bar)
         fabCreateConversation = findViewById(R.id.fab_create_conversation)
+        noConversationsMessage = findViewById(R.id.no_conversations_message)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         conversationAdapter = ConversationAdapter(emptyList(), this) { conversation ->
@@ -59,6 +61,11 @@ class ConversationActivity : BaseActivity() {
         conversationViewModel.conversations.observe(this) { conversations ->
             Log.d("ConversationActivity", "Conversations observed: ${conversations.size}")
             loadingProgressBar.visibility = View.GONE
+            if (conversations.isEmpty()) {
+                noConversationsMessage.visibility = View.VISIBLE
+            } else {
+                noConversationsMessage.visibility = View.GONE
+            }
             conversationAdapter.updateConversations(conversations)
         }
 
@@ -71,3 +78,4 @@ class ConversationActivity : BaseActivity() {
         conversationViewModel.deleteConversation(userId, conversationId)
     }
 }
+

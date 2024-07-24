@@ -2,6 +2,7 @@ package com.example.code_n_share_mobile.view
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -55,6 +56,9 @@ class MainActivity : BaseActivity() {
             showCreatePostDialog()
         }
 
+//        val sharedPreferences = getSharedPreferences("auth", Context.MODE_PRIVATE)
+//        clearSharedPreferences(sharedPreferences)
+
         observeViewModel()
         checkLoginStatus()
     }
@@ -105,6 +109,13 @@ class MainActivity : BaseActivity() {
         postViewModel.clearPosts()
         adapter.updatePosts(emptyList())
         Log.d("MainActivity", "Posts cleared")
+    }
+
+    private fun clearSharedPreferences(sharedPreferences: SharedPreferences) {
+        with(sharedPreferences.edit()) {
+            clear()
+            apply()
+        }
     }
 
     private fun checkLoginStatus() {

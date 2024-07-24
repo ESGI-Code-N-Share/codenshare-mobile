@@ -19,7 +19,7 @@ class EmailVerificationActivity : AppCompatActivity() {
 
         val isSuccess = intent?.getBooleanExtra("success", false) ?: false
         if (isSuccess) {
-            tvVerificationMessage.text = "Your email has been verified successfully!"
+            tvVerificationMessage.text = "Verify your email before login"
             btnGoToLogin.setOnClickListener {
                 navigateToLogin()
             }
@@ -32,6 +32,5 @@ class EmailVerificationActivity : AppCompatActivity() {
     private fun navigateToLogin() {
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
-
     }
 }

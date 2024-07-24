@@ -130,17 +130,6 @@ class ProfileActivity : BaseActivity() {
         recyclerView.adapter = postAdapter
     }
 
-    private fun deletePost(postId: String, userId: String) {
-        postViewModel.deletePost(postId, userId)
-    }
-
-    private fun likePost(postId: String) {
-        postViewModel.likePost(postId, loggedInUserId)
-    }
-
-    private fun unlikePost(postId: String) {
-        postViewModel.unlikePost(postId, loggedInUserId)
-    }
 
     private fun checkIfFollowing() {
         Log.d("ProfileActivity", "Checking if logged in user with ID: $loggedInUserId is following user with ID: ${currentUser.userId}")
@@ -213,10 +202,14 @@ class ProfileActivity : BaseActivity() {
             .setTitle("Edit Profile")
             .setView(dialogView)
             .setPositiveButton("Save") { _, _ ->
+                val updatedFirstname = etFirstname.text.toString().ifEmpty { currentUser.firstname }
+                val updatedLastname = etLastname.text.toString().ifEmpty { currentUser.lastname }
+                val updatedOverview = etOverview.text.toString()
+
                 val updatedUser = EditUser(
-                    firstname = etFirstname.text.toString(),
-                    lastname = etLastname.text.toString(),
-                    overview = etOverview.text.toString()
+                    firstname = updatedFirstname,
+                    lastname = updatedLastname,
+                    overview = updatedOverview
                 )
                 updateUserProfile(loggedInUserId, updatedUser)
             }
@@ -234,5 +227,10 @@ class ProfileActivity : BaseActivity() {
             lastname = updatedUser.lastname,
             overview = updatedUser.overview
         )
+        val sharedPreferences = getSharedPreferences("auth", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("overview", updatedUser.overview)
+        editor.apply()
     }
+
 }
