@@ -34,7 +34,7 @@ class RegisterActivity : AppCompatActivity() {
 
         etFirstname.setText("John")
         etLastname.setText("Doe")
-        etEmail.setText("slimane.abdallah75@gmail.com")
+        etEmail.setText("nordine77213@gmail.com")
         etPassword.setText("password")
         etBirthdate.setText("2000-01-01")
 
@@ -70,7 +70,7 @@ class RegisterActivity : AppCompatActivity() {
                 if (it.success) {
                     Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this, "Registration failed: ${it.error}", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(this, "Registration failed: ${it.error}", Toast.LENGTH_SHORT).show()
                 }
             }
         }

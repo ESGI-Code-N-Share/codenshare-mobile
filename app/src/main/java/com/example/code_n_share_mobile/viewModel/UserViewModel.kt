@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.code_n_share_mobile.models.EditUser
 import com.example.code_n_share_mobile.models.User
 import com.example.code_n_share_mobile.repositories.UserRepository
+import com.example.code_n_share_mobile.utils.extractErrorMessage
 import kotlinx.coroutines.launch
 
 data class FollowResult(val success: Boolean, val error: String?)
@@ -36,7 +37,8 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
                 val users = userRepository.searchUsers(query)
                 _searchResults.postValue(users)
             } catch (e: Exception) {
-                Log.e("UserViewModel", "Error searching users: ${e.message}")
+                val errorMessage = extractErrorMessage(e)
+                Log.e("UserViewModel", "Error searching users: $errorMessage")
                 _searchResults.postValue(emptyList())
             }
         }
@@ -48,8 +50,9 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
                 userRepository.followUser(followerId, followedId)
                 _followResult.postValue(FollowResult(success = true, error = null))
             } catch (e: Exception) {
-                Log.e("UserViewModel", "Error following user: ${e.message}")
-                _followResult.postValue(FollowResult(success = false, error = e.message))
+                val errorMessage = extractErrorMessage(e)
+                Log.e("UserViewModel", "Error following user: $errorMessage")
+                _followResult.postValue(FollowResult(success = false, error = errorMessage))
             }
         }
     }
@@ -60,8 +63,9 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
                 userRepository.unfollowUser(followerId, followedId)
                 _unfollowResult.postValue(UnfollowResult(success = true, error = null))
             } catch (e: Exception) {
-                Log.e("UserViewModel", "Error unfollowing user: ${e.message}")
-                _unfollowResult.postValue(UnfollowResult(success = false, error = e.message))
+                val errorMessage = extractErrorMessage(e)
+                Log.e("UserViewModel", "Error unfollowing user: $errorMessage")
+                _unfollowResult.postValue(UnfollowResult(success = false, error = errorMessage))
             }
         }
     }
@@ -72,7 +76,8 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
                 val followers = userRepository.getFollowers(userId)
                 _followers.postValue(followers)
             } catch (e: Exception) {
-                Log.e("UserViewModel", "Error fetching followers: ${e.message}")
+                val errorMessage = extractErrorMessage(e)
+                Log.e("UserViewModel", "Error fetching followers: $errorMessage")
                 _followers.postValue(emptyList())
             }
         }
@@ -84,7 +89,8 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
                 val following = userRepository.getFollowing(userId)
                 _following.postValue(following)
             } catch (e: Exception) {
-                Log.e("UserViewModel", "Error fetching following: ${e.message}")
+                val errorMessage = extractErrorMessage(e)
+                Log.e("UserViewModel", "Error fetching following: $errorMessage")
                 _following.postValue(emptyList())
             }
         }
@@ -96,7 +102,8 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
                 userRepository.updateUser(userId, user)
                 Log.d("UserViewModel", "User profile updated successfully")
             } catch (e: Exception) {
-                Log.e("UserViewModel", "Error updating user profile: ${e.message}")
+                val errorMessage = extractErrorMessage(e)
+                Log.e("UserViewModel", "Error updating user profile: $errorMessage")
             }
         }
     }

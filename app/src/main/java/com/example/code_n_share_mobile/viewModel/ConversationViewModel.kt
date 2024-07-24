@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.code_n_share_mobile.repositories.ConversationRepository
+import com.example.code_n_share_mobile.utils.extractErrorMessage
 import kotlinx.coroutines.launch
 
 class ConversationViewModel(private val conversationRepository: ConversationRepository) : ViewModel() {
@@ -23,7 +24,8 @@ class ConversationViewModel(private val conversationRepository: ConversationRepo
                 val conversationList = conversationRepository.getConversations(userId)
                 _conversations.postValue(conversationList)
             } catch (e: Exception) {
-                Log.e("ConversationViewModel", "Error loading conversations: ${e.message}")
+                val errorMessage = extractErrorMessage(e)
+                Log.e("ConversationViewModel", "Error loading conversations: $errorMessage")
             }
         }
     }
@@ -35,7 +37,8 @@ class ConversationViewModel(private val conversationRepository: ConversationRepo
                 _creationResult.postValue(newConversation)
                 loadConversations(ownerId)
             } catch (e: Exception) {
-                Log.e("ConversationViewModel", "Error creating conversation: ${e.message}")
+                val errorMessage = extractErrorMessage(e)
+                Log.e("ConversationViewModel", "Error creating conversation: $errorMessage")
             }
         }
     }
@@ -48,7 +51,8 @@ class ConversationViewModel(private val conversationRepository: ConversationRepo
                     loadConversations(userId)
                 }
             } catch (e: Exception) {
-                Log.e("ConversationViewModel", "Error deleting conversation: ${e.message}")
+                val errorMessage = extractErrorMessage(e)
+                Log.e("ConversationViewModel", "Error deleting conversation: $errorMessage")
             }
         }
     }

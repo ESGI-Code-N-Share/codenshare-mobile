@@ -1,3 +1,4 @@
+// AuthViewModel.kt
 package com.example.code_n_share_mobile.viewModel
 
 import LoginRequest
@@ -6,11 +7,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.code_n_share_mobile.repositories.AuthRepository
+import com.example.code_n_share_mobile.utils.extractErrorMessage
 import com.example.code_n_share_mobile.view.EmailVerificationActivity
 import com.example.code_n_share_mobile.view.MainActivity
 import kotlinx.coroutines.launch
@@ -40,8 +43,10 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
                 _registrationResult.postValue(RegistrationResult(success = true, error = null))
                 verifyEmail(context, response.data)
             } catch (e: Exception) {
-                Log.e("AuthViewModel", "Register error: ${e.message}")
-                _registrationResult.postValue(RegistrationResult(success = false, error = e.message))
+                val errorMessage = extractErrorMessage(e)
+                Log.e("AuthViewModel", "Register error: $errorMessage")
+                showToast(context, errorMessage)
+                _registrationResult.postValue(RegistrationResult(success = false, error = errorMessage))
             }
         }
     }
@@ -85,8 +90,10 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
                 val intent = Intent(context, MainActivity::class.java)
                 context.startActivity(intent)
             } catch (e: Exception) {
-                Log.e("AuthViewModel", "Login error: ${e.message}")
-                _loginResult.postValue(LoginResult(success = false, token = null, avatarUrl = null, error = e.message))
+                val errorMessage = extractErrorMessage(e)
+                Log.e("AuthViewModel", "Login error: $errorMessage")
+                showToast(context, errorMessage)
+                _loginResult.postValue(LoginResult(success = false, token = null, avatarUrl = null, error = errorMessage))
             }
         }
     }
@@ -109,21 +116,28 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
                     val intent = Intent(context, MainActivity::class.java)
                     context.startActivity(intent)
                 } else {
-                    Log.e("AuthViewModel", "Logout error: User ID not found")
-                    _logoutResult.postValue(LogoutResult(success = false, error = "User ID not found"))
+                    val errorMessage = "User ID not found"
+                    Log.e("AuthViewModel", "Logout error: $errorMessage")
+                    showToast(context, errorMessage)
+                    _logoutResult.postValue(LogoutResult(success = false, error = errorMessage))
                 }
             } catch (e: Exception) {
-                Log.e("AuthViewModel", "Logout error: ${e.message}")
-                _logoutResult.postValue(LogoutResult(success = false, error = e.message))
+                val errorMessage = extractErrorMessage(e)
+                Log.e("AuthViewModel", "Logout error: $errorMessage")
+                showToast(context, errorMessage)
+                _logoutResult.postValue(LogoutResult(success = false, error = errorMessage))
             }
         }
     }
 
     private fun clearSharedPreferences(sharedPreferences: SharedPreferences) {
-        Log.d("AuthViewModel", "Clearing SharedPreferences")
         with(sharedPreferences.edit()) {
             clear()
             apply()
         }
+    }
+
+    private fun showToast(context: Context, message: String?) {
+        Toast.makeText(context, message ?: "Unknown error occurred", Toast.LENGTH_SHORT).show()
     }
 }
