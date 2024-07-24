@@ -1,10 +1,12 @@
 package com.example.code_n_share_mobile.network
 
+import com.example.code_n_share_mobile.models.EditUser
 import com.example.code_n_share_mobile.models.User
 import com.example.code_n_share_mobile.models.UserResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.HTTP
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -28,4 +30,7 @@ interface UserApiService {
 
     @GET("/api/v1/users/{userId}")
     suspend fun getUserById(@Path("userId") userId: String): User
+
+    @PATCH("/api/v1/users/{userId}")
+    suspend fun updateUser(@Path("userId") userId: String, @Body user: EditUser): User
 }

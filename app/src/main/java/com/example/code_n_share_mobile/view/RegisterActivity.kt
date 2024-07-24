@@ -1,6 +1,7 @@
 package com.example.code_n_share_mobile.view
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -33,16 +34,20 @@ class RegisterActivity : AppCompatActivity() {
 
         etFirstname.setText("John")
         etLastname.setText("Doe")
-        etEmail.setText("slimane.abdallah75@gmail.com")
+        etEmail.setText("nordine77213@gmail.com")
         etPassword.setText("password")
         etBirthdate.setText("2000-01-01")
+
+        Log.d("RegisterActivity", "Views initialized")
 
         this.setupListeners()
         this.observeViewModel()
     }
 
     private fun setupListeners() {
+        Log.d("RegisterActivity", "Setting up listeners")
         btnRegister.setOnClickListener {
+            Log.d("RegisterActivity", "Register button clicked")
             val firstname = etFirstname.text.toString()
             val lastname = etLastname.text.toString()
             val email = etEmail.text.toString()
@@ -50,8 +55,10 @@ class RegisterActivity : AppCompatActivity() {
             val birthdate = etBirthdate.text.toString()
 
             if (firstname.isNotEmpty() && lastname.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && birthdate.isNotEmpty()) {
+                Log.d("RegisterActivity", "Calling registerUser with: $firstname, $lastname, $email")
                 authViewModel.registerUser(this, firstname, lastname, email, password, birthdate)
             } else {
+                Log.d("RegisterActivity", "Some fields are empty")
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             }
         }
@@ -63,7 +70,7 @@ class RegisterActivity : AppCompatActivity() {
                 if (it.success) {
                     Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this, "Registration failed: ${it.error}", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(this, "Registration failed: ${it.error}", Toast.LENGTH_SHORT).show()
                 }
             }
         }

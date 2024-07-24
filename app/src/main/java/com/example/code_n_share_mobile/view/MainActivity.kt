@@ -2,16 +2,18 @@ package com.example.code_n_share_mobile.view
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.code_n_share_mobile.R
 import com.example.code_n_share_mobile.di.injectModuleDependencies
 import com.example.code_n_share_mobile.di.parseAndInjectConfiguration
@@ -26,11 +28,16 @@ class MainActivity : BaseActivity() {
     private val authViewModel: AuthViewModel by viewModel()
     private val postViewModel: PostViewModel by viewModel()
 
-    private lateinit var btnGoToRegister: Button
-    private lateinit var btnGoToLogin: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: PostAdapter
     private lateinit var fabCreatePost: FloatingActionButton
+
+    private var selectedImageUrl: String? = null
+    private val defaultImageUrls = listOf(
+        "https://randomwordgenerator.com/img/picture-generator/55e4d5464f5ba914f1dc8460962e33791c3ad6e04e5074417d2d73dc934bcd_640.jpg",
+        "https://randomwordgenerator.com/img/picture-generator/55e2dc454c5aaa14f1dc8460962e33791c3ad6e04e507441722872d59f4ac3_640.jpg",
+        "https://randomwordgenerator.com/img/picture-generator/54e6d5464f52ae14f1dc8460962e33791c3ad6e04e50744172297cdc9e48c3_640.jpg",
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,26 +45,19 @@ class MainActivity : BaseActivity() {
 
         parseAndInjectConfiguration()
         injectModuleDependencies(this)
-        setupBottomNavigation()
+        setupBottomNavigation(R.id.nav_home)
 
-        this.btnGoToRegister = findViewById(R.id.btn_go_to_register)
-        this.btnGoToLogin = findViewById(R.id.btn_go_to_login)
         this.recyclerView = findViewById(R.id.recycler_view)
         this.fabCreatePost = findViewById(R.id.fab_create_post)
 
-        btnGoToRegister.setOnClickListener {
-            register()
-        }
-
-        btnGoToLogin.setOnClickListener {
-            login()
-        }
-
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        setupRecyclerView()
 
         fabCreatePost.setOnClickListener {
             showCreatePostDialog()
         }
+
+//        val sharedPreferences = getSharedPreferences("auth", Context.MODE_PRIVATE)
+//        clearSharedPreferences(sharedPreferences)
 
         observeViewModel()
         checkLoginStatus()
@@ -67,6 +67,20 @@ class MainActivity : BaseActivity() {
         super.onDestroy()
         authViewModel.logoutResult.removeObservers(this)
         postViewModel.posts.removeObservers(this)
+    }
+
+    private fun setupRecyclerView() {
+        val sharedPreferences = getSharedPreferences("auth", Context.MODE_PRIVATE)
+        val userId = sharedPreferences.getString("userId", "") ?: ""
+        adapter = PostAdapter(
+            posts = emptyList(),
+            userId = userId,
+            onDeletePost = { postId, userId -> postViewModel.deletePost(postId, userId) },
+            onLikePost = { postId -> postViewModel.likePost(postId, userId) },
+            onUnlikePost = { postId -> postViewModel.unlikePost(postId, userId) }
+        )
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = adapter
     }
 
     private fun observeViewModel() {
@@ -81,17 +95,10 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        postViewModel.posts.observe(this, Observer { posts ->
-            val sharedPreferences = getSharedPreferences("auth", Context.MODE_PRIVATE)
-            val userId = sharedPreferences.getString("userId", null) ?: ""
-            adapter = PostAdapter(posts, userId,
-                { postId, userId -> postViewModel.deletePost(postId, userId) },
-                { postId -> postViewModel.likePost(postId, userId) },
-                { postId -> postViewModel.unlikePost(postId, userId) }
-            )
-            recyclerView.adapter = adapter
+        postViewModel.posts.observe(this) { posts ->
+            adapter.updatePosts(posts)
             Log.d("MainActivity", "Posts updated: ${posts.size} posts received")
-        })
+        }
     }
 
     private fun loadPosts() {
@@ -100,61 +107,48 @@ class MainActivity : BaseActivity() {
 
     private fun clearPosts() {
         postViewModel.clearPosts()
-        adapter = PostAdapter(emptyList(), "",
-            { _, _ -> },
-            { _ -> },
-            { _ -> }
-        )
-        recyclerView.adapter = adapter
+        adapter.updatePosts(emptyList())
         Log.d("MainActivity", "Posts cleared")
+    }
+
+    private fun clearSharedPreferences(sharedPreferences: SharedPreferences) {
+        with(sharedPreferences.edit()) {
+            clear()
+            apply()
+        }
     }
 
     private fun checkLoginStatus() {
         val sharedPreferences = getSharedPreferences("auth", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("token", null)
         if (token != null) {
-            btnGoToRegister.visibility = View.GONE
-            btnGoToLogin.visibility = View.GONE
             fabCreatePost.visibility = View.VISIBLE
             loadPosts()
         } else {
-            btnGoToRegister.visibility = View.VISIBLE
-            btnGoToLogin.visibility = View.VISIBLE
-            fabCreatePost.visibility = View.GONE
+            startActivity(Intent(this, IntroductionActivity::class.java))
+            finish()
         }
-    }
-
-    private fun navigateToProfile() {
-        val sharedPreferences = getSharedPreferences("auth", Context.MODE_PRIVATE)
-        val userId = sharedPreferences.getString("userId", "") ?: ""
-        val firstname = sharedPreferences.getString("firstname", "") ?: ""
-        val lastname = sharedPreferences.getString("lastname", "") ?: ""
-        val email = sharedPreferences.getString("email", "") ?: ""
-        val avatarUrl = sharedPreferences.getString("avatarUrl", "") ?: ""
-
-        Intent(this, ProfileActivity::class.java).also {
-            it.putExtra("userId", userId)
-            it.putExtra("firstname", firstname)
-            it.putExtra("lastname", lastname)
-            it.putExtra("email", email)
-            it.putExtra("avatarUrl", avatarUrl)
-            startActivity(it)
-        }
-    }
-
-    private fun register() {
-        Intent(this, RegisterActivity::class.java).also { startActivity(it) }
-    }
-
-    private fun login() {
-        Intent(this, LoginActivity::class.java).also { startActivity(it) }
     }
 
     private fun showCreatePostDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_create_post, null)
         val etTitle = dialogView.findViewById<EditText>(R.id.et_post_title)
         val etContent = dialogView.findViewById<EditText>(R.id.et_post_content)
-        val etImage = dialogView.findViewById<EditText>(R.id.et_post_image)
+        val radioGroupImages = dialogView.findViewById<RadioGroup>(R.id.radio_group_images)
+        val imgPreview = dialogView.findViewById<ImageView>(R.id.img_preview)
+
+        radioGroupImages.setOnCheckedChangeListener { group, checkedId ->
+            selectedImageUrl = when (checkedId) {
+                R.id.radio_image_1 -> defaultImageUrls[0]
+                R.id.radio_image_2 -> defaultImageUrls[1]
+                R.id.radio_image_3 -> defaultImageUrls[2]
+                else -> null
+            }
+            selectedImageUrl?.let { url ->
+                imgPreview.visibility = View.VISIBLE
+                Glide.with(this).load(url).into(imgPreview)
+            }
+        }
 
         val dialog = AlertDialog.Builder(this)
             .setTitle(R.string.create_post)
@@ -162,11 +156,10 @@ class MainActivity : BaseActivity() {
             .setPositiveButton(R.string.create) { _, _ ->
                 val title = etTitle.text.toString()
                 val content = etContent.text.toString()
-                val image = etImage.text.toString()
                 val sharedPreferences = getSharedPreferences("auth", Context.MODE_PRIVATE)
                 val authorId = sharedPreferences.getString("userId", null)
                 if (authorId != null) {
-                    postViewModel.createPost(authorId, title, content, image)
+                    postViewModel.createPost(authorId, title, content, selectedImageUrl)
                 } else {
                     Log.e("MainActivity", "User ID not found in SharedPreferences")
                 }

@@ -1,13 +1,27 @@
+package com.example.code_n_share_mobile.view.adapter
+
+import Conversation
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.code_n_share_mobile.R
+import com.example.code_n_share_mobile.view.MessageActivity
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
-class ConversationAdapter(private var conversations: List<Conversation>) :
-    RecyclerView.Adapter<ConversationAdapter.ConversationViewHolder>() {
+
+class ConversationAdapter(
+    private var conversations: List<Conversation>,
+    private val context: Context,
+    private val onDeleteClick: (Conversation) -> Unit
+) : RecyclerView.Adapter<ConversationAdapter.ConversationViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConversationViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_conversation, parent, false)
@@ -16,7 +30,7 @@ class ConversationAdapter(private var conversations: List<Conversation>) :
 
     override fun onBindViewHolder(holder: ConversationViewHolder, position: Int) {
         val conversation = conversations[position]
-        Log.d("ConversationAdapter", "Binding conversation at position $position: ${conversation.description}")
+        Log.d("ConversationAdapter", "Binding conversation at position $position: ${conversation.owner.firstname}")
         holder.bind(conversation)
     }
 
@@ -30,10 +44,36 @@ class ConversationAdapter(private var conversations: List<Conversation>) :
         notifyDataSetChanged()
     }
 
-    class ConversationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ConversationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvConversationTitle: TextView = itemView.findViewById(R.id.tv_conversation_title)
+        private val tvLastMessage: TextView = itemView.findViewById(R.id.tv_last_message)
+        private val tvLastMessageHour: TextView = itemView.findViewById(R.id.tv_last_message_hour)
+        private val btnDeleteConversation: ImageView = itemView.findViewById(R.id.btn_delete_conversation)
+
         fun bind(conversation: Conversation) {
-            tvConversationTitle.text = conversation.description ?: "No description"
+            val memberNames = conversation.members.joinToString(", ") { it.firstname }
+            tvConversationTitle.text = memberNames
+
+            val lastMessage = conversation.messages.lastOrNull()?.content ?: "No messages"
+            tvLastMessage.text = lastMessage
+
+            val lastMessageHour = conversation.messages.lastOrNull()?.sendAt?.let { formatDate(it) } ?: ""
+            tvLastMessageHour.text = lastMessageHour
+
+            itemView.setOnClickListener {
+                val intent = Intent(context, MessageActivity::class.java)
+                intent.putExtra("conversationId", conversation.conversationId)
+                context.startActivity(intent)
+            }
+
+            btnDeleteConversation.setOnClickListener {
+                onDeleteClick(conversation)
+            }
+        }
+
+        private fun formatDate(date: Date): String {
+            val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+            return format.format(date)
         }
     }
 }

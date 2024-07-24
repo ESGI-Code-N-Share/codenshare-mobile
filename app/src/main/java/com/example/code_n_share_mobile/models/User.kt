@@ -6,7 +6,14 @@ data class User(
     val lastname: String,
     val email: String,
     val token: String,
-    val avatar: String
+    val avatar: String,
+    val overview: String?
+)
+
+data class EditUser(
+    val firstname: String,
+    val lastname: String,
+    val overview: String?
 )
 
 data class UserResponse(

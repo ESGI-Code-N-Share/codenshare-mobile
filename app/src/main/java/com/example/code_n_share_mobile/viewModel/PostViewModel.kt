@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.code_n_share_mobile.models.Post
 import com.example.code_n_share_mobile.repositories.PostRepository
+import com.example.code_n_share_mobile.utils.extractErrorMessage
 import kotlinx.coroutines.launch
 
 class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
@@ -20,7 +21,21 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
                 val postList = postRepository.getPosts()
                 _posts.postValue(postList)
             } catch (e: Exception) {
-                Log.e("PostViewModel", "Error fetching posts: ${e.message}")
+                val errorMessage = extractErrorMessage(e)
+                Log.e("PostViewModel", "Error fetching posts: $errorMessage")
+                _posts.postValue(emptyList())
+            }
+        }
+    }
+
+    fun loadPostsForUser(userId: String) {
+        viewModelScope.launch {
+            try {
+                val postList = postRepository.getPostsForUser(userId)
+                _posts.postValue(postList)
+            } catch (e: Exception) {
+                val errorMessage = extractErrorMessage(e)
+                Log.e("PostViewModel", "Error fetching posts for user: $errorMessage")
                 _posts.postValue(emptyList())
             }
         }
@@ -32,7 +47,8 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
                 postRepository.createPost(authorId, title, content, image)
                 loadPosts()
             } catch (e: Exception) {
-                Log.e("PostViewModel", "Error creating post: ${e.message}")
+                val errorMessage = extractErrorMessage(e)
+                Log.e("PostViewModel", "Error creating post: $errorMessage")
             }
         }
     }
@@ -44,7 +60,8 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
                 postRepository.deletePost(postId, userId)
                 loadPosts()
             } catch (e: Exception) {
-                Log.e("PostViewModel", "Error deleting post: ${e.message}")
+                val errorMessage = extractErrorMessage(e)
+                Log.e("PostViewModel", "Error deleting post: $errorMessage")
             }
         }
     }
@@ -54,9 +71,9 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
             try {
                 Log.d("PostViewModel", "Liking post with postId: $postId, userId: $userId")
                 postRepository.likePost(postId, userId)
-                updatePostLikeStatus(postId, true)
             } catch (e: Exception) {
-                Log.e("PostViewModel", "Error liking post: ${e.message}")
+                val errorMessage = extractErrorMessage(e)
+                Log.e("PostViewModel", "Error liking post: $errorMessage")
             }
         }
     }
@@ -66,20 +83,9 @@ class PostViewModel(private val postRepository: PostRepository) : ViewModel() {
             try {
                 Log.d("PostViewModel", "Unliking post with postId: $postId, userId: $userId")
                 postRepository.unlikePost(postId, userId)
-                updatePostLikeStatus(postId, false)
             } catch (e: Exception) {
-                Log.e("PostViewModel", "Error unliking post: ${e.message}")
-            }
-        }
-    }
-
-    private fun updatePostLikeStatus(postId: String, isLiked: Boolean) {
-        _posts.value = _posts.value?.map { post ->
-            if (post.postId == postId) {
-                Log.d("PostViewModel", "Updating like status for postId: $postId, isLiked: $isLiked")
-                post.copy(isLikedByUser = isLiked, likesCount = if (isLiked) post.likesCount + 1 else post.likesCount - 1)
-            } else {
-                post
+                val errorMessage = extractErrorMessage(e)
+                Log.e("PostViewModel", "Error unliking post: $errorMessage")
             }
         }
     }

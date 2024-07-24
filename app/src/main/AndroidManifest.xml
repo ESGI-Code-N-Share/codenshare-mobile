@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -23,13 +24,22 @@
             android:name=".view.RegisterActivity"
             android:exported="false" />
         <activity
+            android:name=".view.IntroductionActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.ProfileActivity"
             android:exported="true"/>
         <activity
             android:name=".view.SearchUserActivity"
             android:exported="true"/>
         <activity
+            android:name=".view.MessageActivity"
+            android:exported="true"/>
+        <activity
             android:name=".view.ConversationActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".view.CreateConversationActivity"
             android:exported="true"/>
         <activity
             android:name=".view.EmailVerificationActivity"

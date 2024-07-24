@@ -20,7 +20,7 @@
     <string name="hashtag">#hashtag</string>
     <string name="username">\@username</string>
     <string name="your_name">Your Name</string>
-    <string name="create_post">+</string>
+    <string name="create_post">Create Post</string>
     <string name="title">title</string>
     <string name="content">content</string>
     <string name="image_url">image_url\n</string>
@@ -34,4 +34,10 @@
     <string name="search">Search</string>
     <string name="search_results">Search Results</string>
     <string name="user_avatar">user_avatar</string>
+    <string name="selected_users">selected users\n</string>
+    <string name="delete_conversation">delete conversation</string>
+    <string name="type_message">Envoyer un message</string>
+    <string name="button_send">send\n</string>
+    <string name="verify_your_email">We send you an email</string>
+    <string name="please_verify">Please verify before you login</string>
 </resources>

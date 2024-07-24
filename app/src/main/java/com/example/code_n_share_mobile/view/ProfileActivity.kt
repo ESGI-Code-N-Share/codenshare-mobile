@@ -3,27 +3,40 @@ package com.example.code_n_share_mobile.view
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.code_n_share_mobile.R
+import com.example.code_n_share_mobile.models.EditUser
 import com.example.code_n_share_mobile.models.User
+import com.example.code_n_share_mobile.view.adapter.PostAdapter
+import com.example.code_n_share_mobile.viewModel.PostViewModel
 import com.example.code_n_share_mobile.viewModel.UserViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfileActivity : BaseActivity() {
 
     private val userViewModel: UserViewModel by viewModel()
+    private val postViewModel: PostViewModel by viewModel()
 
     private lateinit var imgProfile: ImageView
     private lateinit var tvName: TextView
     private lateinit var tvHandle: TextView
     private lateinit var tvFollowers: TextView
     private lateinit var tvFollowing: TextView
+    private lateinit var tvOverview: TextView
     private lateinit var btnFollow: Button
+    private lateinit var btnEditProfile: Button
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var postAdapter: PostAdapter
 
     private lateinit var currentUser: User
     private lateinit var loggedInUserId: String
@@ -32,14 +45,17 @@ class ProfileActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-        setupBottomNavigation()
+        setupBottomNavigation(R.id.nav_profile)
 
         imgProfile = findViewById(R.id.img_profile)
         tvName = findViewById(R.id.tv_name)
         tvHandle = findViewById(R.id.tv_username)
         tvFollowers = findViewById(R.id.tv_followers)
         tvFollowing = findViewById(R.id.tv_following)
+        tvOverview = findViewById(R.id.tv_overview)
         btnFollow = findViewById(R.id.btn_follow)
+        btnEditProfile = findViewById(R.id.btn_edit_profile)
+        recyclerView = findViewById(R.id.recycler_view)
 
         loggedInUserId = getSharedPreferences("auth", Context.MODE_PRIVATE).getString("userId", "") ?: ""
 
@@ -48,23 +64,28 @@ class ProfileActivity : BaseActivity() {
         val lastname = intent.getStringExtra("lastname") ?: ""
         val email = intent.getStringExtra("email") ?: ""
         val avatarUrl = intent.getStringExtra("avatarUrl") ?: ""
+        val overview = intent.getStringExtra("overview") ?: ""
 
         val userName = "$firstname $lastname"
         val userUsername = "@${email.split("@")[0]}"
 
         tvName.text = userName
         tvHandle.text = userUsername
+        tvOverview.text = overview
 
         Glide.with(this)
             .load(avatarUrl)
             .circleCrop()
             .into(imgProfile)
 
-        currentUser = User(userId, firstname, lastname, email, "", avatarUrl)
+        currentUser = User(userId, firstname, lastname, email, "", avatarUrl, overview)
 
         if (userId == loggedInUserId) {
             btnFollow.visibility = View.GONE
+            btnEditProfile.visibility = View.VISIBLE
         } else {
+            btnFollow.visibility = View.VISIBLE
+            btnEditProfile.visibility = View.GONE
             checkIfFollowing()
 
             btnFollow.setOnClickListener {
@@ -76,9 +97,15 @@ class ProfileActivity : BaseActivity() {
             }
         }
 
+        btnEditProfile.setOnClickListener {
+            showEditProfileDialog()
+        }
+
+        setupRecyclerView()
         observeViewModel()
         userViewModel.getFollowers(userId)
         userViewModel.getFollowing(userId)
+        postViewModel.loadPostsForUser(userId)
     }
 
     override fun onDestroy() {
@@ -88,6 +115,21 @@ class ProfileActivity : BaseActivity() {
         userViewModel.followResult.removeObservers(this)
         userViewModel.unfollowResult.removeObservers(this)
     }
+
+    private fun setupRecyclerView() {
+        val sharedPreferences = getSharedPreferences("auth", Context.MODE_PRIVATE)
+        val userId = sharedPreferences.getString("userId", "") ?: ""
+        postAdapter = PostAdapter(
+            posts = emptyList(),
+            userId = userId,
+            onDeletePost = { postId, userId -> postViewModel.deletePost(postId, userId) },
+            onLikePost = { postId -> postViewModel.likePost(postId, userId) },
+            onUnlikePost = { postId -> postViewModel.unlikePost(postId, userId) }
+        )
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = postAdapter
+    }
+
 
     private fun checkIfFollowing() {
         Log.d("ProfileActivity", "Checking if logged in user with ID: $loggedInUserId is following user with ID: ${currentUser.userId}")
@@ -136,9 +178,59 @@ class ProfileActivity : BaseActivity() {
         userViewModel.following.observe(this) { following ->
             tvFollowing.text = "Following: ${following.size}"
         }
+
+        postViewModel.posts.observe(this) { posts ->
+            postAdapter.updatePosts(posts)
+        }
     }
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
+
+    private fun showEditProfileDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_edit_profile, null)
+        val etFirstname = dialogView.findViewById<EditText>(R.id.et_firstname)
+        val etLastname = dialogView.findViewById<EditText>(R.id.et_lastname)
+        val etOverview = dialogView.findViewById<EditText>(R.id.et_overview)
+
+        etFirstname.setText(currentUser.firstname)
+        etLastname.setText(currentUser.lastname)
+        etOverview.setText(currentUser.overview)
+
+        AlertDialog.Builder(this)
+            .setTitle("Edit Profile")
+            .setView(dialogView)
+            .setPositiveButton("Save") { _, _ ->
+                val updatedFirstname = etFirstname.text.toString().ifEmpty { currentUser.firstname }
+                val updatedLastname = etLastname.text.toString().ifEmpty { currentUser.lastname }
+                val updatedOverview = etOverview.text.toString()
+
+                val updatedUser = EditUser(
+                    firstname = updatedFirstname,
+                    lastname = updatedLastname,
+                    overview = updatedOverview
+                )
+                updateUserProfile(loggedInUserId, updatedUser)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun updateUserProfile(userId: String, updatedUser: EditUser) {
+        userViewModel.updateUserProfile(userId, updatedUser)
+
+        tvName.text = "${updatedUser.firstname} ${updatedUser.lastname}"
+        tvOverview.text = updatedUser.overview
+        currentUser = currentUser.copy(
+            firstname = updatedUser.firstname,
+            lastname = updatedUser.lastname,
+            overview = updatedUser.overview
+        )
+        val sharedPreferences = getSharedPreferences("auth", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("overview", updatedUser.overview)
+        editor.apply()
+    }
+
 }

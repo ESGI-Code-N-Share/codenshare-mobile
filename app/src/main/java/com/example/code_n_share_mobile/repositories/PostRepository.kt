@@ -1,17 +1,42 @@
 package com.example.code_n_share_mobile.repositories
 
+import android.content.Context
 import android.util.Log
 import com.example.code_n_share_mobile.models.CreatePost
 import com.example.code_n_share_mobile.models.Post
-import com.example.code_n_share_mobile.models.PostResponse
 import com.example.code_n_share_mobile.models.User
 import com.example.code_n_share_mobile.network.PostApiService
 
-class PostRepository(private val postApiService: PostApiService) {
+class PostRepository(private val postApiService: PostApiService,private val context: Context) {
 
     suspend fun getPosts(): List<Post> {
-        val response: PostResponse = postApiService.getPosts()
-        return response.data
+        val response = postApiService.getPosts()
+        val sharedPreferences = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
+        val userId = sharedPreferences.getString("userId", "") ?: ""
+
+        return response.data.map { post ->
+            post.copy(
+                likesCount = post.likes.size,
+                isLikedByUser = post.likes.any { it.userId == userId }
+            )
+        }
+    }
+
+    suspend fun getPostsForUser(userId: String): List<Post> {
+        return try {
+            val response = postApiService.getPosts()
+            response.data.filter { it.author.userId == userId }.map { post ->
+                val sharedPreferences = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
+                val loggedInUserId = sharedPreferences.getString("userId", "") ?: ""
+                post.copy(
+                    likesCount = post.likes.size,
+                    isLikedByUser = post.likes.any { it.userId == loggedInUserId }
+                )
+            }
+        } catch (e: Exception) {
+            Log.e("PostRepository", "Error fetching posts for user: ${e.message}")
+            emptyList()
+        }
     }
 
     suspend fun createPost(authorId: String, title: String, content: String, image: String?) {

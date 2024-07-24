@@ -60,7 +60,7 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this, "Login page!", Toast.LENGTH_SHORT).show()
                 } else {
                     Log.e("LoginActivity", "Login failed: ${it.error}")
-                    Toast.makeText(this, "Login failed: ${it.error}", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(this, "Login failed: ${it.error}", Toast.LENGTH_SHORT).show()
                 }
             }
         }
