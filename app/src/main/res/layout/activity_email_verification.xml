@@ -41,11 +41,21 @@
                 android:id="@+id/tv_verification_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:text="Verify your email before login"
+                android:layout_marginBottom="10dp"
+                android:text="@string/verify_your_email"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="@string/please_verify"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="20dp" />
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
